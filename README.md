@@ -15,7 +15,7 @@
   <a href="https://github.com/DigneZzZ/UXWay/releases">All releases</a>
 </p>
 
-Add your subscription by link or QR code. Deep links use `uxway://`.
+Add your subscription by link or QR code. Deep links use `uxway://add/{LINK}` | `uxway://add/{vless://}`
 
 sponsored by [ux.cloud](https://ux.cloud)<br>
 developed by [ux.cloud](https://ux.cloud) — [t.me/firewookie](https://t.me/firewookie)
