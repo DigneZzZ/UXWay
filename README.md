@@ -19,5 +19,3 @@ Add your subscription by link or QR code. Deep links use `uxway://`.
 
 sponsored by [ux.cloud](https://ux.cloud)<br>
 developed by [ux.cloud](https://ux.cloud) — [t.me/firewookie](https://t.me/firewookie)
-
-Release maintainers: [publishing guide](PUBLISHING.md).
