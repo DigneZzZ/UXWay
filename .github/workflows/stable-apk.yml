@@ -1,0 +1,56 @@
+name: Keep the APK download link current
+
+on:
+  release:
+    types: [published, edited]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (leave empty for the latest release)
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stable-apk-${{ github.event.release.tag_name || inputs.tag || 'latest' }}
+  cancel-in-progress: false
+
+jobs:
+  normalize-apk-name:
+    if: github.event_name == 'workflow_dispatch' || (!github.event.release.draft && !github.event.release.prerelease)
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - name: Give the APK a stable download name
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -n "$RELEASE_TAG" ]]; then
+            release="$(gh api "repos/$GH_REPO/releases/tags/$RELEASE_TAG")"
+          else
+            release="$(gh api "repos/$GH_REPO/releases/latest")"
+          fi
+
+          if jq -e '.assets[] | select(.name == "UXWay.apk" and .state == "uploaded")' <<< "$release" > /dev/null; then
+            echo "UXWay.apk is already available."
+            exit 0
+          fi
+
+          apks="$(jq '[.assets[] | select(.state == "uploaded" and (.name | ascii_downcase | endswith(".apk")))]' <<< "$release")"
+          count="$(jq 'length' <<< "$apks")"
+          if [[ "$count" != 1 ]]; then
+            echo "::error::Expected one APK, found $count. Upload one universal APK, or name the intended download UXWay.apk."
+            exit 1
+          fi
+
+          asset_id="$(jq -r '.[0].id' <<< "$apks")"
+          gh api --method PATCH "repos/$GH_REPO/releases/assets/$asset_id" \
+            -f name=UXWay.apk \
+            -f label="UXWay for Android" > /dev/null
+          echo "The APK is available as UXWay.apk."

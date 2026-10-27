@@ -7,7 +7,7 @@
 <p align="center">VPN client for Android and Android TV.</p>
 
 <p align="center">
-  <strong><a href="https://github.com/DigneZzZ/UXWay/releases/latest">Download latest release</a></strong><br>
+  <strong><a href="https://github.com/DigneZzZ/UXWay/releases/latest/download/UXWay.apk">Download for Android</a></strong><br>
   <sub>Android 7.0 or later</sub>
 </p>
 
